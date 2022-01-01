@@ -7,7 +7,7 @@
 </head>
 <body>
 
-
+<!-- display keys and their corresponding sounds-->
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -47,6 +47,7 @@
     </div>
   </div>
 
+<!-- associate keys with sounds-->
   <audio data-key="65" src="sounds/clap.wav"></audio>
   <audio data-key="83" src="sounds/hihat.wav"></audio>
   <audio data-key="68" src="sounds/kick.wav"></audio>
@@ -58,26 +59,26 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-  function removeTransition(e) {
-    if (e.propertyName !== 'transform') return;
-    e.target.classList.remove('playing');
-  }
+ const keys = document.querySelectorAll(`.key`);
 
-  function playSound(e) {
-    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
-    const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
-    if (!audio) return;
+ function playSound(e) {
+   const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`); //select sound
+   const key = document.querySelector(`.key[data-key="${e.keyCode}"]`); // select key div
+   if(!audio) return; //stop function if a key without sound is selected
+   audio.cuurentTime = 0; //reset sound
+   audio.play();
+   key.classList.add('playing'); //add "playing" visual effect
+ };
+ function removePlayingTransition(e) {
+   if (e.propertyName !== 'transform') return; //ignore keys that were not transformed
+   this.classList.remove('playing'); //remove "playing" visual effect
+ };
 
-    key.classList.add('playing');
-    audio.currentTime = 0;
-    audio.play();
-  }
-
-  const keys = Array.from(document.querySelectorAll('.key'));
-  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
-  window.addEventListener('keydown', playSound);
+ for (let key of keys) {
+   key.addEventListener('transitionend', removePlayingTransition);
+ };
+ window.addEventListener('keydown', playSound);
 </script>
-
 
 </body>
 </html>
